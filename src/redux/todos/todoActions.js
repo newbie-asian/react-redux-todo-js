@@ -26,6 +26,7 @@ export const actionCreators = {
         }
     },
     completeTodo: (payload) => {
+        console.log("%c Line:29 🎂 payload", "color:#ffdd4d", payload);
         return {
             type: COMPLETE_TODO,
             payload

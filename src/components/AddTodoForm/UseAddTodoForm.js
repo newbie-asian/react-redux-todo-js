@@ -6,17 +6,30 @@ import { v4 as uuid } from 'uuid';
 
 const UseAddTodoForm = (props) => {
   const { addTodo } = props;
-  const newId = uuid();
-  const [showModal, setShowModal] = useState(false);
-  const [todo, setTodo] = useState({
+  const default_todo_value = {
     id: '',
-    todo_id: '',
+    todo_id: uuid(),
     title: '',
     description: '',
-    created_date: new Date().toISOString().slice(0, 10),
+    created_date: new Date(),
     deadline: '',
     status: 'Pending'
-  })
+  }
+
+  const [showModal, setShowModal] = useState(false);
+  const [todo, setTodo] = useState({...default_todo_value})
+  
+  const dateFormatter = (date) => {
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    const amPm = hours > 12 ? 'PM' : 'AM';
+
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    minutes = minutes.toString().padStart(2, '0');
+    
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${hours}:${minutes} ${amPm}`;
+  }
   
   const handleShowModal = (isOpen) => {
     setShowModal(isOpen)
@@ -27,7 +40,6 @@ const UseAddTodoForm = (props) => {
     
     setTodo(prevState => ({
       ...prevState,
-      todo_id: newId,
       [id]: value
     }))
   }
@@ -35,23 +47,25 @@ const UseAddTodoForm = (props) => {
   const handleDateInputChange = (new_date) => {
     setTodo(prevState => ({
       ...prevState,
-      deadline: new_date.toISOString().slice(0,10)
+      deadline: new_date
     }))
   }
 
   const handleSubmit = () => {
-    const payload = {...todo};
+    const formatted_created_date = dateFormatter(todo.created_date);
+    const formatted_deadline = dateFormatter(todo.deadline);
+
+    const payload = {...todo, created_date: formatted_created_date, deadline: formatted_deadline}
     addTodo(payload);
+    setTodo({...default_todo_value})
   }
-  
-  console.log("%c Line:12 🍰 todo", "color:#6ec1c2", todo);
   return (
     <AddTodoForm 
-    handleShowModal={handleShowModal} 
-      showModal={showModal} 
+      handleShowModal={handleShowModal} 
       handleInputChange={handleInputChange} 
       handleDateInputChange={handleDateInputChange} 
       handleSubmit={handleSubmit}
+      showModal={showModal} 
       todo={todo} 
     />
     )

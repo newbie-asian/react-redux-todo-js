@@ -5,7 +5,7 @@ import UseTodoGrid from '../../components/TodoGrid/UseTodoGrid';
 
 const Dashboard = () => {
   return (
-    <Container maxWidth="xl"  sx={{ p: 4, }}>
+    <Container maxWidth="xxl"  sx={{ p: 6 }}>
       <Box>
         <UseAddTodoForm />
       </Box>

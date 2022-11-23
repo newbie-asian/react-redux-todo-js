@@ -1,22 +1,22 @@
 import React from 'react';
 import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions} from '@mui/material';
 
-const EditTodoConfirmationDialog = (props) => {
-    const { handleShowModal, showModal, handleSubmit } = props;
+const DeleteTodoConfirmationDialog = (props) => {
+    const { handleShowModal, showModal, rowId, handleDeleteTodo } = props;
     return (
-        <Dialog open={showModal} onClose={() => handleShowModal(false, '')}>
-            <DialogTitle>CONFIRMATION MESSAGE</DialogTitle>
+        <Dialog open={showModal} onClose={() => handleShowModal(false, '')} >
+            <DialogTitle>DELETE CONFIRMATION</DialogTitle>
             <DialogContent >
                 <DialogContentText>
-                Are you sure you want to edit this todo?
+                    Are you sure you want to delete this todo?
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-            <Button variant="contained" color="error" onClick={() => handleShowModal(false, '')}>CANCEL</Button>
-            <Button variant="contained" color="success" onClick={handleSubmit}>SAVE</Button>
+            <Button variant="contained" color="warning" onClick={() => handleShowModal(false, '')}>CANCEL</Button>
+            <Button variant="contained" id="delete" color="error" onClick={(evt) => handleDeleteTodo(rowId)}>DELETE</Button>
             </DialogActions>
         </Dialog>
     )
 }
 
-export default EditTodoConfirmationDialog
+export default DeleteTodoConfirmationDialog

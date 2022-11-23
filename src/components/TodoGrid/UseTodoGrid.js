@@ -1,26 +1,47 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { actionCreators } from '../../redux/todos/todoActions';
 import TodoGrid from './TodoGrid';
 
 const UseTodoGrid = (props) => {
+  const { todos, completeTodo, deleteTodo } = props;
+
   const [showModal, setShowModal] = useState(false);
-  
   const [buttonType, setButtonType ] = useState('');
-  const [rowData, setRowData] = useState('');
+  const [rowId, setRowId] = useState('');
   
   
   const handleShowModal = (isOpen, buttonType) => {
     setShowModal(isOpen);
     setButtonType(buttonType);
   }
-  
-  const handleGetRowData = (evt, params) => {
-    setRowData(params.row.todo_id)
+
+  const handleDeleteTodo = (rowId) => {
+    deleteTodo(rowId);
+    setShowModal(false);
   }
-  console.log("%c Line:11 🍢 buttonType", "color:#4fff4B", buttonType);
-  console.log("%c Line:10 🍯 rowData", "color:#6ec1c2", rowData);
+
+  const handleCompleteTodo = (rowData) => {
+    const { row = {} } = rowData;
+    completeTodo(row.todo_id);
+  }
+
+  const handleGetRowId = (params) => {
+    const { todo_id = "" } = params.row;
+    setRowId(todo_id);
+  }
+
   return (
-    <TodoGrid handleShowModal={handleShowModal} showModal={showModal} todos={props.todos} buttonType={buttonType} handleGetRowData={handleGetRowData} rowData={rowData} />
+    <TodoGrid 
+      handleShowModal={handleShowModal}
+      handleDeleteTodo={handleDeleteTodo}
+      handleCompleteTodo={handleCompleteTodo}
+      handleGetRowId={handleGetRowId} 
+      showModal={showModal} 
+      rowId={rowId} 
+      todos={todos} 
+      buttonType={buttonType} 
+    />
   )
 }
 
@@ -30,4 +51,11 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(UseTodoGrid)
+const mapDispatchToProps = dispatch => {
+  return {
+    completeTodo: payload => dispatch(actionCreators.completeTodo(payload)),
+    deleteTodo: payload => dispatch(actionCreators.deleteTodo(payload))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UseTodoGrid)

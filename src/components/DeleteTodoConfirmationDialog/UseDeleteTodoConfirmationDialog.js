@@ -4,16 +4,12 @@ import { actionCreators } from '../../redux/todos/todoActions';
 import DeleteTodoConfirmationDialog from './DeleteTodoConfirmationDialog';
 
 const UseDeleteTodoConfirmationDialog = (props) => {
-    const { handleShowModal, showModal, rowData } = props;
+    const { handleShowModal, showModal, deleteTodo, rowData } = props;
     const [showConfirmationModal, setShowConfirmationModal] = useState(true);
 
-    const handleShowConfirmationModal = (isOpen) => {
-        setShowConfirmationModal(isOpen)
-    }
-
     const handleSubmit = () => {
-        const payload = props.rowData;
-        props.deleteTodo(payload)
+        const payload = rowData;
+        deleteTodo(payload)
     }
 
     return (

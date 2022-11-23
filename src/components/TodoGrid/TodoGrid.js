@@ -1,19 +1,27 @@
 import React from 'react';
 import { IconButton } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { DeleteOutlineOutlined, CheckCircleOutlineOutlined, ModeEditOutlineOutlined } from '@mui/icons-material';
+import { DeleteOutlineOutlined, CheckCircleOutlineOutlined, ModeEditOutlineOutlined, RuleOutlined } from '@mui/icons-material';
 import UseEditTodoForm from '../EditTodoForm/UseEditTodoForm';
 import { rows } from '../../services/gridRows';
-import UseDeleteTodoConfirmationDialog from '../DeleteTodoConfirmationDialog/UseDeleteTodoConfirmationDialog';
+import DeleteTodoConfirmationDialog from '../DeleteTodoConfirmationDialog/DeleteTodoConfirmationDialog';
 
 const TodoGrid = (props) => {
-  const { handleShowModal, showModal, buttonType, handleGetRowData, rowData, todos} = props;
-  console.log("%c Line:11 🍅 buttonType", "color:#fca650", buttonType);
+  const { 
+    handleShowModal, 
+    showModal, 
+    buttonType, 
+    handleGetRowId, 
+    handleDeleteTodo, 
+    handleCompleteTodo, 
+    rowId, 
+    todos
+  } = props;
 
   const columns = [
     {
     field: "id",
-    flex: 1,
+    flex: 0,
     headerName: "ID"
     },
     {
@@ -46,22 +54,40 @@ const TodoGrid = (props) => {
     flex: 1,
     headerName: "Actions",
     renderCell: (params) => {
-        console.log(params);
 
         return  (
             <>
-            <IconButton id='complete' color="success"><CheckCircleOutlineOutlined /></IconButton>
-            <IconButton id='edit' color="warning" onClick={(evt) => {
-            handleGetRowData(evt, params)
-            handleShowModal(true, evt.target.parentElement.id);
-            }}><ModeEditOutlineOutlined /></IconButton>
-            <IconButton id='delete' color="error" onClick={(evt) => {
-              handleGetRowData(evt, params)
-              handleShowModal(true, evt.target.parentElement.id);
-            }}><DeleteOutlineOutlined /></IconButton>
+              <IconButton 
+                id='complete' 
+                onClick={(evt) => {
+                  handleCompleteTodo(params)
+                }}>
+                {params.row.status === 'Pending' ? <CheckCircleOutlineOutlined color="success" /> : 
+                  <RuleOutlined color="info" />}
+              </IconButton>
+
+              <IconButton 
+              id='edit' 
+              color="warning" 
+              disabled={params.row.status === 'Completed' ? true : false}
+              onClick={(evt) => {
+                handleGetRowId(params)
+                handleShowModal(true, evt.target.parentElement.id);
+              }}>
+                <ModeEditOutlineOutlined />
+              </IconButton>
+
+              <IconButton 
+              id='delete' 
+              color="error" 
+              onClick={(evt) => {
+                handleGetRowId(params)
+                handleShowModal(true, evt.target.parentElement.id);
+              }}>
+                <DeleteOutlineOutlined />
+              </IconButton>
             </>
         )
-
       }
     }
 ]
@@ -74,9 +100,18 @@ return (
           return {...row, id: `0${index + 1}`}
         })} columns={columns} />
         {(showModal && buttonType === 'edit') &&
-          <UseEditTodoForm showModal={showModal} handleShowModal={handleShowModal} handleGetRowData={handleGetRowData} rowData={rowData}/>
+          <UseEditTodoForm 
+            showModal={showModal} 
+            handleShowModal={handleShowModal} 
+            handleGetRowId={handleGetRowId} 
+            rowId={rowId}/>
         }
-        {(showModal && buttonType === 'delete') && <UseDeleteTodoConfirmationDialog showModal={showModal} handleShowModal={handleShowModal} rowData={rowData} />}
+        {(showModal && buttonType === 'delete') && 
+          <DeleteTodoConfirmationDialog 
+            showModal={showModal} 
+            handleDeleteTodo={handleDeleteTodo}
+            handleShowModal={handleShowModal} 
+            rowId={rowId} />}
       </div>
     </div>
   </div>

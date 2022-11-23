@@ -4,16 +4,14 @@ import actionCreators from '../../redux/todos/todoActions';
 import { connect } from 'react-redux';
 
 const UseEditTodoForm = (props) => {
-  const { handleShowModal, showModal, rowData } = props;
+  const { handleShowModal, showModal, rowData, todos } = props;
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [todo, setTodo] = useState({});
 
   // useEffect(() => {
-  //   effect
-  //   return () => {
-  //     cleanup
-  //   };
-  // }, [input]);
+  //   const mapped
+  // })
+
   const handleShowConfirmationModal = (isOpen) => {
     setShowConfirmationModal(isOpen)
   }
@@ -51,4 +49,10 @@ const UseEditTodoForm = (props) => {
   )
 }
 
-export default UseEditTodoForm
+const mapStateToProps = state => {
+  return {
+    todos: state.todos
+  }
+}
+
+export default connect(UseEditTodoForm)(UseEditTodoForm)
